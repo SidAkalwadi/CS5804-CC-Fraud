@@ -1,11 +1,13 @@
+import pandas
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import metrics
+import matplotlib.image as pltimg
 
 #import the data
-data = pandas.read_csv("sample-1-25.csv", nrows=2000)
+data = pandas.read_csv("sample-1-25.csv", nrows=1900000)
 
 features = ['APPRD_AUTHZN_CNT', 'AVG_DLY_AUTHZN_AMT', 'MRCH_CATG_CD',
 	'POS_ENTRY_MTHD_CD', 'RCURG_AUTHZN_IND', 'DISTANCE_FROM_HOME',
@@ -18,7 +20,7 @@ Y = data['FRD_IND']
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
 #create instance of log res
-logisticRegr = LogisticRegression(solver = 'lbfgs')
+logisticRegr = LogisticRegression()
 
 #fit the data
 logisticRegr.fit(x_train, y_train)
@@ -30,10 +32,19 @@ predictions = logisticRegr.predict(x_test)
 score = logisticRegr.score(x_test, y_test)
 print(score)
 
-#plot confusion matrix with colors
-plt.figure(figsize=(2,2))
-sns.heatmap(cm, annot=True, fmt=".3f", linewidths=.5, square = True, cmap = 'Blues_r')
-plt.ylabel('Actual label')
-plt.xlabel('Predicted label')
-all_sample_title = 'Accuracy Score: {0}'.format(score)
-plt.title(all_sample_title, size = 15)
+#print confusion matrix
+cm = metrics.confusion_matrix(y_test, predictions)
+print(cm)
+
+# #plot confusion matrix with colors
+# plt.figure(figsize=(2,2))
+# sns.heatmap(cm, annot=True, fmt=".3f", linewidths=.5, square = True, cmap = 'Blues_r')
+# plt.ylabel('Actual label')
+# plt.xlabel('Predicted label')
+# all_sample_title = 'Accuracy Score: {0}'.format(score)
+# plt.title(all_sample_title, size = 15)
+
+# #show the image
+# img=pltimg.imread('sample-1-25-logRes.png')
+# plt.imshow(img)
+# plt.show()
